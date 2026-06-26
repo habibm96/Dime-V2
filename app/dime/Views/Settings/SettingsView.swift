@@ -104,7 +104,7 @@ struct SettingsView: View {
     Bool = true
 
   @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency:
-    String = Locale.current.currencyCode!
+    String = (Locale.current.currencyCode ?? "USD")
 
   @AppStorage("incomeTracking", store: UserDefaults(suiteName: "group.com.habibm96.stash"))
   var incomeTracking: Bool = true

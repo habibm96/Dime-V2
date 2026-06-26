@@ -71,7 +71,7 @@ struct TemplateTransactionView: View {
     @State var showCategoryPicker = false
     @State var showCategorySheet = false
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -950,7 +950,7 @@ struct SettingsQuickAddWidgetView: View {
 struct SettingsQuickAddWidgetDraggingView: View {
     @AppStorage("showCents", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var showCents: Bool = true
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
 
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!

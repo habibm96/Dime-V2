@@ -285,7 +285,7 @@ struct MainBudgetView: View {
         }
     }
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -599,7 +599,7 @@ struct SingleBudgetView: View {
         }
     }
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -974,7 +974,7 @@ struct BudgetDollarView: View {
     var scale: Int
     var size: CGFloat
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -1010,7 +1010,7 @@ struct DetailedBudgetDollarView: View {
     var amount: Double
     @AppStorage("showCents", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var showCents: Bool = true
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -1038,7 +1038,7 @@ struct DetailedBudgetDifferenceDollarView: View {
 
     @AppStorage("showCents", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var showCents: Bool = true
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -1427,7 +1427,7 @@ struct TimeBudgetView: View {
         }
     }
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -1677,7 +1677,7 @@ struct TimeBudgetView: View {
 struct FilteredCategoryDayBudgetView: View {
     @FetchRequest private var transactions: FetchedResults<Transaction>
     @Binding var totalSpent: Double
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }
@@ -1921,7 +1921,7 @@ struct TimeMainBudgetView: View {
         }
     }
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
     var currencySymbol: String {
         return Locale.current.localizedCurrencySymbol(forCurrencyCode: currency)!
     }

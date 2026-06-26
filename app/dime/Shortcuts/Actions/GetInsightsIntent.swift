@@ -141,7 +141,7 @@ struct ShortcutInsightsView: View {
 
     @AppStorage("showCents", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var showCents: Bool = true
 
-    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = Locale.current.currencyCode!
+    @AppStorage("currency", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var currency: String = (Locale.current.currencyCode ?? "USD")
 
     var leftText: String {
         switch type {
