@@ -1,74 +1,44 @@
-# Dime
+# Stash
 
-<p align="center">
-  <img src="./docs/assets/hero.png" width="451" style="max-width: 100%; height: auto;" />
-</p>
+Stash is a personal finance tracker for iOS, built with SwiftUI. It is a fork of
+[Dime](https://github.com/rafsoh/dimeApp) by Rafael Soh, used as the foundation
+for continued development.
 
-Dime is a 100% free, open-source personal finance tracker built with iOS design guidelines in mind. [Download Dime on the App Store.](https://apps.apple.com/sg/app/dime-budget-expense-tracker/id1635280255)
+## Features
 
-## App Preview
-
-<p align="center">
-  <img src="./docs/assets/3.png" height="300" /> 
-  <img src="./docs/assets/4.png" height="300" /> 
-  <img src="./docs/assets/5.png" height="300" />
-  <img src="./docs/assets/6.png" height="300" />
-</p>
-<p align="center">
-  <img src="./docs/assets/7.png" height="300" />
-  <img src="./docs/assets/8.png" height="300" />
-  <img src="./docs/assets/9.png" height="300" />
-</p>
-
-## Why You’ll Love Dime
-
-- 100% free forever, with no paywall or ads.
 - Beautifully iOS-centric design, with simplicity at its core.
 - Insightful expenditure breakdowns over various time periods.
 - Create budgets based on expense categories and stick to them.
 - Create recurring expenses with custom time frames.
-- Sync your expenses, categories and budgets with other devices via iCloud.
+- Sync your expenses, categories and budgets across devices via iCloud.
 - Custom reminders to input your expenses.
 - Biometric authentication to protect your data.
 - Home screen quick actions make capturing new expenses a breeze.
-- A gorgeous night theme for dark mode fanatics.
-- Informative home and lock screen widgets keep you updated at a glance.
+- A night theme for dark mode.
+- Home and lock screen widgets.
 
-## How to help
+## Build
 
-- Please feel free to raise [issues](https://github.com/rarfell/dimeApp/issues) for any inquiries, suggestions for improvements, or bugs you encounter.
-- You're welcome to fork the repository and propose changes through a pull request, although the decision to merge it rests with the project maintainers.
-- To follow along with app updates, follow [@budgetwithdime](https://x.com/budgetwithdime) on X / Twitter
-- If you would like to discuss with the contributors, feel free to drop [Rafael](https://x.com/rarfell) or [Jeffrey](https://x.com/jefcodes) a DM!
+Requires **Xcode** on macOS.
 
-## How to build
+1. Clone the repo and open `app/dime.xcodeproj` in Xcode.
+2. Let Swift Package Manager resolve dependencies (or run
+   `File > Packages > Resolve Package Versions`).
+3. Set your own signing **Team** and confirm the bundle identifiers
+   (namespaced under `com.habibm96.stash`).
+4. Register the **App Group** (`group.com.habibm96.stash`) and **iCloud
+   container** (`iCloud.com.habibm96.stash`) capabilities in your Apple Developer
+   account, or disable those capabilities for a local-only build.
 
-### Required
+See [`REBRANDING.md`](REBRANDING.md) for the full first-build checklist and
+[`ARCHITECTURE.md`](ARCHITECTURE.md) for a map of the codebase.
 
-- Xcode
+## Third-party dependencies
 
-### Build Steps
+Alamofire, CloudKitSyncMonitor, ConfettiSwiftUI, CrookedText, SwiftUI Introspect,
+IsScrolling, Popovers, ScrollViewStyle, STools.
 
-- Clone this project either via Xcode or terminal:
-  `git clone https://github.com/rarfell/dimeApp.git`
-- For branch selection use:
-  `--single-branch --branch [branchname]` after `clone`
-- After completion, open `dime.xcodeproj` using Xcode.
-- Please let all dependecies update automatically but we would recommend to run
-  `File > Packages > Resolve Package Versions` to ensure, everything is updated.
+## License
 
-## Third party dependencies
-
-- [Alamofire](https://github.com/Alamofire/Alamofire)
-- [CloudKitSyncMonitor](https://github.com/ggruen/CloudKitSyncMonitor)
-- [ConfettiSwiftUI](https://github.com/simibac/ConfettiSwiftUI)
-- [CrookedText](https://github.com/duemunk/CrookedText)
-- [SwiftUI Introspect](https://github.com/siteline/swiftui-introspect)
-- [IsScrolling](https://github.com/fatbobman/IsScrolling)
-- [Popovers](https://github.com/aheze/Popovers/)
-- ScrollViewStyle
-- STools
-
-## Licence
-
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+Licensed under the GNU General Public License v3.0 — see [LICENSE](LICENSE).
+As a derivative of Dime (GPL v3), Stash remains under GPL v3.

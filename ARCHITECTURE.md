@@ -11,7 +11,7 @@
 | Language | Swift (100%) |
 | UI | SwiftUI (with some UIKit bridging for the tab bar, keyboard, introspection) |
 | Persistence | Core Data via `NSPersistentCloudKitContainer` (iCloud sync built in) |
-| Settings/state | `@AppStorage` backed by a shared App Group `group.com.rafaelsoh.dime` |
+| Settings/state | `@AppStorage` backed by a shared App Group `group.com.habibm96.stash` |
 | Extensions | Home-screen widgets (WidgetKit), Siri/Shortcuts (App Intents) |
 | Dependencies | Swift Package Manager — Alamofire, ConfettiSwiftUI, SwiftUIIntrospect, etc. |
 | Build | macOS + Xcode only. Open `app/dime.xcodeproj`. |
@@ -58,7 +58,7 @@ The schema is defined in `app/MainModel.xcdatamodeld`. Core entities:
 - **TemplateTransaction** — saved/recurring transaction templates for quick entry.
 
 Sync: `DataController.init()` configures the CloudKit container
-(`iCloud.com.rafaelsoh.dime`) and an App Group store at `Main.sqlite`, with
+(`iCloud.com.habibm96.stash`) and an App Group store at `Main.sqlite`, with
 history tracking + remote-change notifications enabled.
 
 ## Key file: `Data/DataController.swift` (~1,700 lines)
@@ -97,13 +97,13 @@ Other notable views: `TransactionView` (add/edit a transaction, ~1,794 ln),
 - **Typography** — `Utilities/FontExtension.swift` + `DynamicType.swift`.
   The app heavily uses `.system(size:weight:design: .rounded)`.
 - **Settings storage** — almost all preferences are `@AppStorage` keys in the
-  `group.com.rafaelsoh.dime` suite, so the app and widgets share them.
+  `group.com.habibm96.stash` suite, so the app and widgets share them.
 - **Tab bar visibility** — `TabBarManager` (env object) hides/shows the bar.
 - **Toasts & sheets** — `Utilities/AlertToast.swift`, `BottomSheet.swift`.
 
 ## Things to know before building on a Mac
 
-1. **Signing & bundle IDs** — everything is namespaced to `com.rafaelsoh.dime`
+1. **Signing & bundle IDs** — everything is namespaced to `com.habibm96.stash`
    (app group, iCloud container, bundle IDs). To build under your own Apple
    account you must change these in the target settings and `*.entitlements`,
    or disable iCloud/widgets/app-group capabilities.
