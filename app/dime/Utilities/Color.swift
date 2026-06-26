@@ -247,7 +247,6 @@ private struct ColorPickerSheet: UIViewRepresentable {
         func presentationControllerDidDismiss(_: UIPresentationController) {
             isPresented = false
             didPresent = false
-            print("change3")
         }
     }
 

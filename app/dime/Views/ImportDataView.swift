@@ -792,7 +792,6 @@ struct ImportDataView: View {
                     }
                 } catch {}
             case let .failure(error):
-                print(error.localizedDescription)
             }
         }
         .sheet(isPresented: $exportSample) {

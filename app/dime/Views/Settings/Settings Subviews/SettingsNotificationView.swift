@@ -72,7 +72,6 @@ struct SettingsNotificationsView: View {
                         newNotification()
                       }
                     } else if let error = error {
-                      print(error.localizedDescription)
                       notificationsEnabled = false
                     }
                   }

@@ -11,7 +11,7 @@
 			<string>com.habibm96.stash</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>dimeapp</string>
+				<string>stashapp</string>
 			</array>
 		</dict>
 	</array>
@@ -30,7 +30,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Search Entries</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>dimeapp://search</string>
+			<string>stashapp://search</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
@@ -38,7 +38,7 @@
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Add Expense</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>dimeapp://newExpense</string>
+			<string>stashapp://newExpense</string>
 		</dict>
 	</array>
 	<key>UIBackgroundModes</key>

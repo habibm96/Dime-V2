@@ -585,7 +585,6 @@ struct SettingsView: View {
     do {
       try csvText.write(to: path!, atomically: true, encoding: String.Encoding.utf8)
     } catch {
-      print("\(error)")
     }
 
     var filesToShare = [Any]()

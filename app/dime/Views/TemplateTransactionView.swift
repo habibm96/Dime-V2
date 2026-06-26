@@ -731,10 +731,7 @@ struct TemplateTransactionView: View {
 
             if let unwrappedCategory = transaction.category {
                 _category = State(initialValue: unwrappedCategory)
-                print(unwrappedCategory.wrappedName)
-                print("FOUND IT")
             } else {
-                print("CANNOT FIND")
             }
 
             _income = State(initialValue: transaction.income)
@@ -742,7 +739,6 @@ struct TemplateTransactionView: View {
             _repeatType = State(initialValue: Int(transaction.recurringType))
             _repeatCoefficient = State(initialValue: Int(transaction.recurringCoefficient))
 
-            print("IM HERE")
         }
 
         self.order = order
@@ -1022,7 +1018,6 @@ struct SettingsQuickAddWidgetDraggingView: View {
                     .onDrop(of: [.text], delegate: DropViewDelegate(grid: grid, gridData: gridData))
                     .onTapGesture {
                         selectedItem = grid
-                        print(grid.index)
                         lastSelectedIndex = grid.index
                     }
                 }

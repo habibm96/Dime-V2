@@ -102,7 +102,6 @@ struct NumberPad: View {
             engine = try CHHapticEngine()
             try engine?.start()
         } catch {
-            print("There was an error creating the engine: \(error.localizedDescription)")
         }
     }
 
@@ -132,7 +131,6 @@ struct NumberPad: View {
             try engine?.start()
             try player?.start(atTime: 0)
         } catch {
-            print("Failed to play pattern: \(error.localizedDescription).")
         }
 
 //        

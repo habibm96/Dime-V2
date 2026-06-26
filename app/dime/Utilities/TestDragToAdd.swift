@@ -61,7 +61,6 @@ struct CustomRefreshView<Content: View>: View {
                             progress = (progress > 1 ? 1 : progress)
                             scrollDelegate.scrollOffset = offset
                             scrollDelegate.progress = progress
-                            print(progress)
                         }
 
                         // Additional haptic feedback at "success"

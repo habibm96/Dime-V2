@@ -64,7 +64,6 @@ class UnlockManager: NSObject, ObservableObject, SKPaymentTransactionObserver, S
             }
 
             if response.invalidProductIdentifiers.isEmpty == false {
-                print("ALERT: Received invalid product identifiers: \(response.invalidProductIdentifiers)")
                 self.requestState = .failed
                 return
             }

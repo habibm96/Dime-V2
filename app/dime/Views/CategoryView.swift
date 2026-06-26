@@ -725,7 +725,6 @@ struct CategoryListView: View {
         do {
             dataController.save()
         } catch {
-            print(error.localizedDescription)
         }
     }
 
@@ -1435,7 +1434,6 @@ struct EditCategoryAlert: View {
             }
         }
         .onChange(of: customSelectedColor) { _ in
-            print("changed")
             selectedColour = customSelectedColor.toHex() ?? "#FFFFFF"
         }
         .colorPickerSheet(isPresented: $showNativePicker, selection: $customSelectedColor, supportsAlpha: false, title: "")
