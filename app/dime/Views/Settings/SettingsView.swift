@@ -230,7 +230,7 @@ struct SettingsView: View {
                 
             }
             .padding(10)
-            .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+            .settingsCard()
           }
           .padding(.horizontal, 20)
           .padding(.bottom, 25)
@@ -292,7 +292,7 @@ struct SettingsView: View {
 
             }
             .padding(10)
-            .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+            .settingsCard()
           }
           .padding(.horizontal, 20)
           .padding(.bottom, 25)
@@ -364,7 +364,7 @@ struct SettingsView: View {
               }
             }
             .padding(10)
-            .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+            .settingsCard()
           }
           .padding(.horizontal, 20)
           .padding(.bottom, 25)
@@ -443,7 +443,7 @@ struct SettingsView: View {
               }
             }
             .padding(10)
-            .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+            .settingsCard()
           }
           .padding(.horizontal, 20)
           .padding(.bottom, 15)

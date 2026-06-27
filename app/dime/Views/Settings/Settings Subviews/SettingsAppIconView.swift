@@ -103,7 +103,7 @@ struct SettingsAppIconView: View {
         }
       }
       .padding(.horizontal, 15)
-      .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+      .settingsCard()
       .onChange(of: activeIcon) { newValue in
         UIApplication.shared.setAlternateIconName(newValue)
       }

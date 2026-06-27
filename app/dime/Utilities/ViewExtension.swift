@@ -48,6 +48,58 @@ extension UINavigationController: UIGestureRecognizerDelegate {
     }
 }
 
+// MARK: - Liquid Glass card helpers
+
+extension View {
+    /// Grouped-settings card: Liquid Glass on iOS 26+, SettingsBackground colour below.
+    func settingsCard(cornerRadius: CGFloat = 9) -> some View {
+        modifier(SettingsCardBackground(cornerRadius: cornerRadius))
+    }
+
+    /// Content card (transaction rows, etc.): Liquid Glass on iOS 26+, SecondaryBackground below.
+    func contentCard(cornerRadius: CGFloat = 13) -> some View {
+        modifier(ContentCardBackground(cornerRadius: cornerRadius))
+    }
+}
+
+private struct SettingsCardBackground: ViewModifier {
+    let cornerRadius: CGFloat
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            content.background {
+                GlassEffectContainer {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .glassEffect()
+                }
+            }
+        } else {
+            content.background(
+                Color.SettingsBackground,
+                in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            )
+        }
+    }
+}
+
+private struct ContentCardBackground: ViewModifier {
+    let cornerRadius: CGFloat
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            content.background {
+                GlassEffectContainer {
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .glassEffect()
+                }
+            }
+        } else {
+            content.background(
+                Color.SecondaryBackground,
+                in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            )
+        }
+    }
+}
+
 class Utilities {
     @AppStorage("colourScheme") var selectedAppearance = 0
     var userInterfaceStyle: ColorScheme? = .dark

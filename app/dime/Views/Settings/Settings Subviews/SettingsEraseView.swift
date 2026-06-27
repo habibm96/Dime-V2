@@ -37,7 +37,7 @@ struct SettingsEraseView: View {
           .frame(maxWidth: .infinity, alignment: .leading)
           .padding(.vertical, 12)
           .padding(.horizontal, 15)
-          .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+          .settingsCard()
       }
 
       Text(

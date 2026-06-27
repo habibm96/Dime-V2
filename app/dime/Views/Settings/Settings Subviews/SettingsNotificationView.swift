@@ -100,7 +100,7 @@ struct SettingsNotificationsView: View {
         .padding(.vertical, 9)
       }
       .padding(.horizontal, 15)
-      .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+      .settingsCard()
       .padding(.bottom, 20)
 
       if showNotifications {
@@ -187,7 +187,7 @@ struct SettingsNotificationsView: View {
           .padding(.vertical, 9)
         }
         .padding(.horizontal, 15)
-        .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+        .settingsCard()
         .onChange(of: option) { newValue in
           UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
             option, forKey: "notificationOption")

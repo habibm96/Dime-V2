@@ -105,7 +105,7 @@ struct SettingsWeekStartView: View {
         }
       }
       .padding(.horizontal, 15)
-      .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+      .settingsCard()
       .padding(.bottom, 30)
 
       Text("Start of Month")
@@ -163,7 +163,7 @@ struct SettingsWeekStartView: View {
       }
       .padding(.horizontal, 15)
       .frame(height: scrollViewHeight)
-      .background(Color.SettingsBackground, in: RoundedRectangle(cornerRadius: 9))
+      .settingsCard()
 
       Text("Close and reload app for change to take effect.")
         .font(.system(.caption, design: .rounded).weight(.medium))

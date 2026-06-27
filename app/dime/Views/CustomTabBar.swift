@@ -34,6 +34,59 @@ struct CustomTabBar: View {
     }
 
     var body: some View {
+        Group {
+            if #available(iOS 26, *) {
+                GlassEffectContainer {
+                    tabBarContent
+                        .background { Rectangle().glassEffect() }
+                }
+            } else {
+                tabBarContent
+                    .background(Color.PrimaryBackground)
+            }
+        }
+        .fullScreenCover(isPresented: $addTransaction, onDismiss: {
+            if confetti {
+                if count != transactions.count {
+                    counter += 1
+                }
+            }
+
+            if firstLaunch {
+                firstLaunch = false
+            }
+
+        }, content: {
+            TransactionView(toEdit: nil)
+        })
+        .onChange(of: launchAdd) { _ in
+            addTransaction = true
+        }
+        .onChange(of: addTransaction) { _ in
+            if addTransaction {
+                count = transactions.count
+            }
+        }
+        .onChange(of: transactions.count) { _ in
+            if !transactions.isEmpty {
+                self.animate = false
+            } else {
+                self.animate = true
+            }
+        }
+        .onOpenURL { url in
+            guard
+                url.host == "newExpense"
+
+            else {
+                return
+            }
+
+            addTransaction = true
+        }
+    }
+
+    @ViewBuilder private var tabBarContent: some View {
         HStack(spacing: 4) {
             TabButton(image: "Log", zoomed: isZoomed, currentTab: $currentTab)
 
@@ -78,46 +131,6 @@ struct CustomTabBar: View {
         .padding(.horizontal, 15)
         .padding(.bottom, bottomEdge - 10)
         .frame(maxWidth: .infinity)
-        .background(Color.PrimaryBackground)
-        .fullScreenCover(isPresented: $addTransaction, onDismiss: {
-            if confetti {
-                if count != transactions.count {
-                    counter += 1
-                }
-            }
-
-            if firstLaunch {
-                firstLaunch = false
-            }
-
-        }, content: {
-            TransactionView(toEdit: nil)
-        })
-        .onChange(of: launchAdd) { _ in
-            addTransaction = true
-        }
-        .onChange(of: addTransaction) { _ in
-            if addTransaction {
-                count = transactions.count
-            }
-        }
-        .onChange(of: transactions.count) { _ in
-            if !transactions.isEmpty {
-                self.animate = false
-            } else {
-                self.animate = true
-            }
-        }
-        .onOpenURL { url in
-            guard
-                url.host == "newExpense"
-
-            else {
-                return
-            }
-
-            addTransaction = true
-        }
     }
 }
 
@@ -127,7 +140,15 @@ struct MyButtonStyle: ButtonStyle {
             .font(.system(size: 20, weight: .bold))
             .foregroundColor(Color.LightIcon)
             .frame(width: 65, height: 38)
-            .background(configuration.isPressed ? Color.SubtitleText : Color.DarkBackground, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+            .background {
+                if #available(iOS 26, *) {
+                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                        .glassEffect(.regular.interactive())
+                } else {
+                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                        .fill(configuration.isPressed ? Color.SubtitleText : Color.DarkBackground)
+                }
+            }
     }
 }
 
