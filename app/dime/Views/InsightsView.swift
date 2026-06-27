@@ -578,19 +578,8 @@ struct SingleGraphView: View {
 
     var selectedDateString: String {
         if let unwrappedDate = selectedDate {
-            let dateFormatter = DateFormatter()
-
-            if type == 3 {
-                dateFormatter.dateFormat = "MMM yyyy"
-            } else {
-                dateFormatter.dateFormat = "d MMM yyyy"
-            }
-
-            if language == "ru" {
-                return dateFormatter.string(from: unwrappedDate)
-            } else {
-                return dateFormatter.string(from: unwrappedDate)
-            }
+            let formatter = type == 3 ? DateFormatter.monthYear : DateFormatter.dayMonthYear
+            return formatter.string(from: unwrappedDate)
         } else {
             return ""
         }
@@ -605,11 +594,8 @@ struct SingleGraphView: View {
     @AppStorage("firstDayOfMonth", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var firstDayOfMonth: Int = 1
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
         if type == 1 {
             let calendar = Calendar.current
-            dateFormatter.dateFormat = "d MMM"
             let endComponents = DateComponents(day: 7, second: -1)
             let endWeekDate = calendar.date(byAdding: endComponents, to: date) ?? Date.now
 
@@ -617,35 +603,22 @@ struct SingleGraphView: View {
             let endMonth = calendar.component(.month, from: endWeekDate)
 
             if startMonth == endMonth {
-                let anotherDateFormatter = DateFormatter()
-                anotherDateFormatter.dateFormat = "d"
-
-                return anotherDateFormatter.string(from: date) + " - " + dateFormatter.string(from: endWeekDate)
+                return DateFormatter.dayNumber.string(from: date) + " - " + DateFormatter.dayMonth.string(from: endWeekDate)
             } else {
-                return dateFormatter.string(from: date) + " - " + dateFormatter.string(from: endWeekDate)
+                return DateFormatter.dayMonth.string(from: date) + " - " + DateFormatter.dayMonth.string(from: endWeekDate)
             }
         } else if type == 2 {
             if firstDayOfMonth == 1 {
-                dateFormatter.dateFormat = "MMM yyyy"
+                return DateFormatter.monthYear.string(from: date)
             } else {
-                dateFormatter.dateFormat = "d MMM"
                 let endComponents = DateComponents(month: 1, second: -1)
                 let endMonthDate = Calendar.current.date(byAdding: endComponents, to: date) ?? Date.now
-                if language == "ru" {
-                    return dateFormatter.string(from: date) + " - " + dateFormatter.string(from: endMonthDate)
-                } else {
-                    return dateFormatter.string(from: date)  + " - " + dateFormatter.string(from: endMonthDate)
-                }
+                return DateFormatter.dayMonth.string(from: date) + " - " + DateFormatter.dayMonth.string(from: endMonthDate)
             }
         } else if type == 3 {
-            dateFormatter.dateFormat = "yyyy"
+            return DateFormatter.year.string(from: date)
         }
-
-        if language == "ru" {
-            return dateFormatter.string(from: date)
-        } else {
-            return dateFormatter.string(from: date)
-        }
+        return ""
     }
 
     var selectedCategoryName: String
@@ -964,15 +937,12 @@ struct WeekGraphView: View {
     }
 
     var swipeStrings: (backward: String, forward: String) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d MMM"
-
         let calendar = Calendar.current
 
         let startOfLastWeek = calendar.date(byAdding: .day, value: -7, to: showingWeek) ?? Date.now
         let startOfNextWeek = calendar.date(byAdding: .day, value: 7, to: showingWeek) ?? Date.now
 
-        return (dateFormatter.string(from: startOfLastWeek), dateFormatter.string(from: startOfNextWeek))
+        return (DateFormatter.dayMonth.string(from: startOfLastWeek), DateFormatter.dayMonth.string(from: startOfNextWeek))
     }
 
     @State private var offset: CGFloat = 0
@@ -1314,11 +1284,7 @@ struct SingleWeekBarGraphView: View {
     }
 
     func getWeekday(day: Date) -> String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "EEE"
-
-        return dateFormatter.string(from: day)
+        return DateFormatter.weekdayShort.string(from: day)
     }
 
     init(week: Date, date: Binding<Date?>?, mode: Binding<Bool>, amount: Binding<Double>, dataController: DataController, income: Bool) {
@@ -1385,9 +1351,6 @@ struct MonthGraphView: View {
     }
 
     var swipeStrings: (backward: String, forward: String) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM yy"
-
         let calendar = Calendar.current
 
         let startOfLastMonth = calendar.date(byAdding: .month, value: -1, to: showingMonth) ?? Date.now
@@ -1764,15 +1727,12 @@ struct YearGraphView: View {
     }
 
     var swipeStrings: (backward: String, forward: String) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy"
-
         let calendar = Calendar.current
 
         let startOfLastYear = calendar.date(byAdding: .year, value: -1, to: showingYear) ?? Date.now
         let startOfNextYear = calendar.date(byAdding: .year, value: 1, to: showingYear) ?? Date.now
 
-        return (dateFormatter.string(from: startOfLastYear), dateFormatter.string(from: startOfNextYear))
+        return (DateFormatter.year.string(from: startOfLastYear), DateFormatter.year.string(from: startOfNextYear))
     }
 
     @State private var offset: CGFloat = 0
@@ -2059,11 +2019,7 @@ struct SingleYearBarGraphView: View {
     }
 
     func getMonth(month: Date) -> String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "M"
-
-        return dateFormatter.string(from: month)
+        return DateFormatter.monthNumber.string(from: month)
     }
 
     init(year: Date, date: Binding<Date?>?, mode: Binding<Bool>, amount: Binding<Double>, dataController: DataController, income: Bool) {

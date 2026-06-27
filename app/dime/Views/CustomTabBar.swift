@@ -17,7 +17,7 @@ struct CustomTabBar: View {
 
     @State var checkingFace: Bool = false
 
-    @FetchRequest(sortDescriptors: []) private var transactions: FetchedResults<Transaction>
+    @FetchRequest(fetchRequest: { let r = Transaction.fetchRequest(); r.sortDescriptors = []; r.fetchBatchSize = 20; return r }()) private var transactions: FetchedResults<Transaction>
 
     @State var count = 0
     @Binding var counter: Int

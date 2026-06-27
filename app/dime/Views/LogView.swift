@@ -1439,20 +1439,14 @@ struct SingleTransactionView: View {
             if swapTimeLabel {
                 return transaction.wrappedCategoryName
             } else {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "h:mm a"
-
-                return formatter.string(from: transaction.wrappedDate)
+                return DateFormatter.time12h.string(from: transaction.wrappedDate)
             }
         }
     }
 }
 
 func dateFormatter(date: Date) -> String {
-    let dateFormatter = DateFormatter()
-
-    dateFormatter.dateFormat = "d MMM"
-    return dateFormatter.string(from: date).uppercased()
+    return DateFormatter.dayMonth.string(from: date).uppercased()
 }
 
 struct EmojiLogView: View {
@@ -2002,11 +1996,7 @@ struct DateStepperView: View {
     let currentDate = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date.now) ?? Date.now
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "d MMM yyyy"
-
-        return dateFormatter.string(from: date)
+        return DateFormatter.dayMonthYear.string(from: date)
     }
 
     var body: some View {
@@ -2071,25 +2061,17 @@ struct WeekStepperView: View {
     @State var startDate = Date.now
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "d MMM"
-
         let endComponents = DateComponents(day: 7, second: -1)
         let endWeekDate = Calendar.current.date(byAdding: endComponents, to: showingDate) ?? Date.now
 
-        return dateFormatter.string(from: showingDate) + " - " + dateFormatter.string(from: endWeekDate)
+        return DateFormatter.dayMonth.string(from: showingDate) + " - " + DateFormatter.dayMonth.string(from: endWeekDate)
     }
 
     var accessibilityDateString: String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "d MMM"
-
         let endComponents = DateComponents(day: 7, second: -1)
         let endWeekDate = Calendar.current.date(byAdding: endComponents, to: showingDate) ?? Date.now
 
-        return "showing transactions from " + dateFormatter.string(from: showingDate) + " to " + dateFormatter.string(from: endWeekDate)
+        return "showing transactions from " + DateFormatter.dayMonth.string(from: showingDate) + " to " + DateFormatter.dayMonth.string(from: endWeekDate)
     }
 
     var body: some View {
@@ -2161,11 +2143,7 @@ struct MonthStepperView: View {
     @State var startDate = Date.now
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "MMM yyyy"
-
-        return dateFormatter.string(from: showingDate)
+        return DateFormatter.monthYear.string(from: showingDate)
     }
 
     var body: some View {
@@ -2219,20 +2197,12 @@ func dateConverter(date: Date) -> String {
     } else if calendar.isDateInYesterday(date) {
         return String(localized: "yesterday")
     } else if startOfCurrentYear > date {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "EEE, d MMM yy"
-
-        var string = dateFormatter.string(from: date)
+        var string = DateFormatter.weekdayDayMonthYearShort.string(from: date)
         string.insert("'", at: string.index(string.endIndex, offsetBy: -2))
 
         return string
     } else {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "EEE, d MMM"
-
-        return dateFormatter.string(from: date)
+        return DateFormatter.weekdayDayMonth.string(from: date)
     }
 }
 
@@ -2244,20 +2214,12 @@ func dateConverterAccessibilityLabel(date: Date) -> String {
     } else if calendar.isDateInYesterday(date) {
         return "yesterday"
     } else {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "EEE, d MMM yyyy"
-
-        return "on " + dateFormatter.string(from: date)
+        return "on " + DateFormatter.weekdayDayMonthYear.string(from: date)
     }
 }
 
 func timeConverterAccessibilityLabel(date: Date) -> String {
-    let dateFormatter = DateFormatter()
-
-    dateFormatter.dateFormat = "h:mm a"
-
-    return dateFormatter.string(from: date)
+    return DateFormatter.time12h.string(from: date)
 }
 
 func dayTotal(dayTransaction: [Transaction]) -> Double {

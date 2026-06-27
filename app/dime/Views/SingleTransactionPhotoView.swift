@@ -157,9 +157,7 @@ struct SingleTransactionPhotoView: View {
     }
 
     func dateFormatter(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.dateFormat = "d MMM"
+        let dateFormatter = DateFormatter.dayMonth
         return dateFormatter.string(from: date).uppercased()
     }
 }

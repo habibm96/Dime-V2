@@ -83,7 +83,7 @@ struct TemplateTransactionView: View {
     @State var toastTitle = ""
     @State var toastImage = ""
 
-    @ObservedObject var keyboardHeightHelper = KeyboardHeightHelper()
+    @StateObject private var keyboardHeightHelper = KeyboardHeightHelper()
 
     @AppStorage("firstTransactionViewLaunch", store: UserDefaults(suiteName: "group.com.habibm96.stash")) var firstLaunch: Bool = true
 

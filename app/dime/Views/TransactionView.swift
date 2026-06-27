@@ -66,7 +66,7 @@ struct TransactionView: View {
     @State var categoryButtonOutlineColor = Color.Outline
     @State var shake: Bool = false
 
-    @ObservedObject var keyboardHeightHelper = KeyboardHeightHelper()
+    @StateObject private var keyboardHeightHelper = KeyboardHeightHelper()
 
     @AppStorage(
         "firstTransactionViewLaunch", store: UserDefaults(suiteName: "group.com.habibm96.stash"))
@@ -101,9 +101,7 @@ struct TransactionView: View {
     }
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d MMM yyyy"
-        return dateFormatter.string(from: date)
+        return DateFormatter.dayMonthYear.string(from: date)
     }
 
     var showTime: Bool {
@@ -934,23 +932,15 @@ struct TransactionView: View {
     }
 
     func getDateString(date: Date) -> String {
-        let formatter = DateFormatter()
-
         if isDateToday(date: date) {
-            formatter.dateFormat = "d MMM"
-
-            return formatter.string(from: date)
+            return DateFormatter.dayMonth.string(from: date)
         } else {
-            formatter.dateFormat = "E, d MMM"
-
-            return formatter.string(from: date)
+            return DateFormatter.weekdayDayMonthAlt.string(from: date)
         }
     }
 
     func getTimeString(date: Date) -> String {
-        let formatter = DateFormatter()
-
-        formatter.dateFormat = "HH:mm"
+        let formatter = DateFormatter.time24h
 
         return formatter.string(from: date)
     }

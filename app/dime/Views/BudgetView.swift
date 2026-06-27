@@ -1382,25 +1382,19 @@ struct TimeBudgetView: View {
     @State var startDate = Date.now
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
         if budgetType == 1 {
-            dateFormatter.dateFormat = "d MMM yyyy"
-            return dateFormatter.string(from: startDate)
+            return DateFormatter.dayMonthYear.string(from: startDate)
         } else if budgetType == 2 {
             let endDate = Calendar.current.date(byAdding: .day, value: 6, to: startDate) ?? Date.now
-            dateFormatter.dateFormat = "d MMM"
-            return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonth.string(from: startDate) + " - " + DateFormatter.dayMonth.string(from: endDate)
         } else if budgetType == 3 {
             var endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)!
             endDate = Calendar.current.date(byAdding: .day, value: -1, to: endDate)!
-            dateFormatter.dateFormat = "d MMM"
-            return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonth.string(from: startDate) + " - " + DateFormatter.dayMonth.string(from: endDate)
         } else if budgetType == 4 {
             var endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
             endDate = Calendar.current.date(byAdding: .day, value: -1, to: endDate)!
-            dateFormatter.dateFormat = "d MMM yy"
-            return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonthYearShort.string(from: startDate) + " - " + DateFormatter.dayMonthYearShort.string(from: endDate)
         } else {
             return ""
         }
@@ -1452,9 +1446,7 @@ struct TimeBudgetView: View {
                 }
             } else {
                 if budgetType == 1 {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "d MMM"
-                    return String(localized: "left on \(dateFormatter.string(from: startDate))")
+                    return String(localized: "left on \(DateFormatter.dayMonth.string(from: startDate))")
                 } else if budgetType == 2 {
                     let components = Calendar.current.dateComponents([.day], from: startDate, to: budget.wrappedDate)
                     let weekString = String(localized: "\((components.day ?? 0) / 7) weeks ago")
@@ -1486,9 +1478,7 @@ struct TimeBudgetView: View {
                 }
             } else {
                 if budgetType == 1 {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "d MMM"
-                    return String(localized: "over on \(dateFormatter.string(from: startDate))")
+                    return String(localized: "over on \(DateFormatter.dayMonth.string(from: startDate))")
                 } else if budgetType == 2 {
                     let components = Calendar.current.dateComponents([.day], from: startDate, to: budget.wrappedDate)
                     let weekString = String(localized: "\((components.day ?? 0) / 7) weeks ago")
@@ -1876,25 +1866,19 @@ struct TimeMainBudgetView: View {
     @State var startDate = Date.now
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
         if budgetType == 1 {
-            dateFormatter.dateFormat = "d MMM yyyy"
-            return dateFormatter.string(from: startDate)
+            return DateFormatter.dayMonthYear.string(from: startDate)
         } else if budgetType == 2 {
             let endDate = Calendar.current.date(byAdding: .day, value: 6, to: startDate) ?? Date.now
-            dateFormatter.dateFormat = "d MMM"
-            return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonth.string(from: startDate) + " - " + DateFormatter.dayMonth.string(from: endDate)
         } else if budgetType == 3 {
             var endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)!
             endDate = Calendar.current.date(byAdding: .day, value: -1, to: endDate)!
-            dateFormatter.dateFormat = "d MMM"
-            return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonth.string(from: startDate) + " - " + DateFormatter.dayMonth.string(from: endDate)
         } else if budgetType == 4 {
             var endDate = Calendar.current.date(byAdding: .year, value: 1, to: startDate)!
             endDate = Calendar.current.date(byAdding: .day, value: -1, to: endDate)!
-            dateFormatter.dateFormat = "d MMM yy"
-            return dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonthYearShort.string(from: startDate) + " - " + DateFormatter.dayMonthYearShort.string(from: endDate)
         } else {
             return ""
         }
@@ -1946,9 +1930,7 @@ struct TimeMainBudgetView: View {
                 }
             } else {
                 if budgetType == 1 {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "d MMM"
-                    return String(localized: "left on \(dateFormatter.string(from: startDate))")
+                    return String(localized: "left on \(DateFormatter.dayMonth.string(from: startDate))")
                 } else if budgetType == 2 {
                     let components = Calendar.current.dateComponents([.day], from: startDate, to: budget.wrappedDate)
                     let weekString = String(localized: "\((components.day ?? 0) / 7) weeks ago")
@@ -1980,9 +1962,7 @@ struct TimeMainBudgetView: View {
                 }
             } else {
                 if budgetType == 1 {
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "d MMM"
-                    return String(localized: "over on \(dateFormatter.string(from: startDate))")
+                    return String(localized: "over on \(DateFormatter.dayMonth.string(from: startDate))")
                 } else if budgetType == 2 {
                     let components = Calendar.current.dateComponents([.day], from: startDate, to: budget.wrappedDate)
                     let weekString = String(localized: "\((components.day ?? 0) / 7) weeks ago")
@@ -2308,17 +2288,12 @@ struct BudgetStepperView: View {
     let type: Int
 
     var dateString: String {
-        let dateFormatter = DateFormatter()
-
         if type == 1 {
-            dateFormatter.dateFormat = "d MMM yyyy"
-            return dateFormatter.string(from: date)
+            return DateFormatter.dayMonthYear.string(from: date)
         } else if type == 4 {
-            dateFormatter.dateFormat = "d MMM yy"
-            return dateFormatter.string(from: date) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonthYearShort.string(from: date) + " - " + DateFormatter.dayMonthYearShort.string(from: endDate)
         } else {
-            dateFormatter.dateFormat = "d MMM"
-            return dateFormatter.string(from: date) + " - " + dateFormatter.string(from: endDate)
+            return DateFormatter.dayMonth.string(from: date) + " - " + DateFormatter.dayMonth.string(from: endDate)
         }
     }
 
