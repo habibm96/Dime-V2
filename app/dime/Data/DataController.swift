@@ -7,6 +7,7 @@
 
 import CoreData
 import Foundation
+import NaturalLanguage
 import SwiftUI
 import WidgetKit
 
@@ -501,6 +502,7 @@ class DataController: ObservableObject {
         }
 
         var categoryScores: [Category: Double] = [:]
+        var semanticCache: [String: Double] = [:]
 
         for (index, transaction) in results(for: request).enumerated() {
             guard let category = transaction.category else {
@@ -526,7 +528,17 @@ class DataController: ObservableObject {
             } else if matchingTokens > 0 {
                 score = Double(matchingTokens) * 2.0
             } else {
-                continue
+                // No literal overlap: fall back to on-device semantic similarity
+                // (NaturalLanguage word embeddings) so meaning-related items still
+                // match, e.g. typing "cappuccino" against a history of "coffee".
+                let similarity = semanticSimilarity(
+                    noteTokens: noteTokens,
+                    transactionTokens: transactionTokens,
+                    cache: &semanticCache)
+                guard similarity >= 0.6 else {
+                    continue
+                }
+                score = similarity * 3.0
             }
 
             categoryScores[category, default: 0] += score * recencyWeight
@@ -553,6 +565,45 @@ class DataController: ObservableObject {
         text
             .components(separatedBy: .whitespacesAndNewlines)
             .filter { $0.count >= 2 }
+    }
+
+    /// On-device word embedding used for semantic category suggestions.
+    /// Loaded lazily once (loading is relatively expensive) and reused.
+    private lazy var categoryWordEmbedding: NLEmbedding? = NLEmbedding.wordEmbedding(for: .english)
+
+    /// Best semantic similarity (0...1) between any note token and any transaction
+    /// token, using cosine distance from the word embedding. Results are cached per
+    /// transaction token within a single suggestion pass to keep per-keystroke cost low.
+    private func semanticSimilarity(noteTokens: Set<String>,
+                                    transactionTokens: Set<String>,
+                                    cache: inout [String: Double]) -> Double {
+        guard let embedding = categoryWordEmbedding else {
+            return 0
+        }
+
+        var best = 0.0
+        for token in transactionTokens {
+            let similarity: Double
+            if let cached = cache[token] {
+                similarity = cached
+            } else {
+                var tokenBest = 0.0
+                for noteToken in noteTokens {
+                    // Cosine distance runs 0 (identical) ... 2 (opposite); map to 0...1.
+                    let distance = embedding.distance(between: noteToken, and: token, distanceType: .cosine)
+                    let sim = max(0, 1 - distance / 2)
+                    if sim > tokenBest {
+                        tokenBest = sim
+                    }
+                }
+                cache[token] = tokenBest
+                similarity = tokenBest
+            }
+            if similarity > best {
+                best = similarity
+            }
+        }
+        return best
     }
 
     @available(iOS 16, *)
