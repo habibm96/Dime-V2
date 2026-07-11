@@ -19,14 +19,12 @@ struct InsightsSummaryBlockView: View {
     }
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 9) {
             Image(systemName: income ? "arrow.up.right" : "arrow.down.right")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(color)
-                .padding(5)
-                .frame(width: 30, height: 30)
-                .background(color.opacity(0.23), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .padding(.horizontal, 3)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.white)
+                .frame(width: 28, height: 28)
+                .background(color, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
 
             VStack(alignment: .leading, spacing: 0) {
                 Text(income ? "Income" : "Expenses")
@@ -35,24 +33,27 @@ struct InsightsSummaryBlockView: View {
                     .foregroundColor(Color.SubtitleText)
 
                 Text(amountString)
-                    .font(.system(.title3, design: .rounded).weight(.medium))
+                    .font(.system(.title3, design: .rounded).weight(.semibold))
                     .foregroundColor(Color.PrimaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             }
+
+            Spacer(minLength: 0)
         }
-        .padding(7)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 9)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
         .onTapGesture {
             self.action()
         }
-        .background(Color.TertiaryBackground, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        // Subtle colour tint ties each block to its meaning (green income /
+        // red expenses) instead of a heavy neutral grey.
+        .background(color.opacity(0.1), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay {
-            if showOverlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(Color.SubtitleText.opacity(0.7), lineWidth: 1.3)
-            }
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(color.opacity(showOverlay ? 0.9 : 0.18), lineWidth: showOverlay ? 1.6 : 1)
         }
     }
 }
