@@ -34,17 +34,13 @@ struct CustomTabBar: View {
     }
 
     var body: some View {
-        Group {
-            if #available(iOS 26, *) {
-                GlassEffectContainer {
-                    tabBarContent
-                        .background { Rectangle().glassEffect() }
-                }
-            } else {
-                tabBarContent
-                    .background(Color.PrimaryBackground)
+        tabBarContent
+            .background(.regularMaterial)
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(Color.Outline.opacity(0.45))
+                    .frame(height: 1)
             }
-        }
         .fullScreenCover(isPresented: $addTransaction, onDismiss: {
             if confetti {
                 if count != transactions.count {
@@ -141,13 +137,8 @@ struct MyButtonStyle: ButtonStyle {
             .foregroundColor(Color.LightIcon)
             .frame(width: 65, height: 38)
             .background {
-                if #available(iOS 26, *) {
-                    RoundedRectangle(cornerRadius: 13, style: .continuous)
-                        .glassEffect(.regular.interactive())
-                } else {
-                    RoundedRectangle(cornerRadius: 13, style: .continuous)
-                        .fill(configuration.isPressed ? Color.SubtitleText : Color.DarkBackground)
-                }
+                RoundedRectangle(cornerRadius: 13, style: .continuous)
+                    .fill(configuration.isPressed ? Color.SubtitleText : Color.DarkBackground)
             }
     }
 }

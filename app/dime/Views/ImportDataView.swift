@@ -362,7 +362,7 @@ struct ImportDataView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 0) {
                                 VStack(spacing: 0) {
-                                    ForEach(0 ..< (numberOfRows + 1)) { number in
+                                    ForEach(0 ..< (numberOfRows + 1), id: \.self) { number in
                                         if number == 0 {
                                             Rectangle()
                                                 .fill(Color.PrimaryBackground)
@@ -776,6 +776,10 @@ struct ImportDataView: View {
             case let .success(file):
                 do {
                     if file.startAccessingSecurityScopedResource() {
+                        defer {
+                            file.stopAccessingSecurityScopedResource()
+                        }
+
                         guard let message = try String(data: Data(contentsOf: file), encoding: .utf8) else {
                             showToast = true
                             toastMessage = "Invalid File"
@@ -785,13 +789,11 @@ struct ImportDataView: View {
                         data = message
 
                         processCSV()
-
-                        do {
-                            file.stopAccessingSecurityScopedResource()
-                        }
                     }
                 } catch {}
-            case let .failure(error):
+            case .failure:
+                showToast = true
+                toastMessage = "Invalid File"
             }
         }
         .sheet(isPresented: $exportSample) {

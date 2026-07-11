@@ -349,7 +349,7 @@ struct HorizontalPieChartView: View {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         switch type {
@@ -407,7 +407,7 @@ struct FilteredCategoryInsightsView: View {
 
             var calendar = Calendar(identifier: .gregorian)
 
-            calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+            calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
             calendar.minimumDaysInFirstWeek = 4
 
             switch type {
@@ -522,7 +522,7 @@ struct FilteredInsightsView: View {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         if type == 1 {
@@ -1356,7 +1356,7 @@ struct MonthGraphView: View {
         let startOfLastMonth = calendar.date(byAdding: .month, value: -1, to: showingMonth) ?? Date.now
         let startOfNextMonth = calendar.date(byAdding: .month, value: 1, to: showingMonth) ?? Date.now
 
-        return (dateFormatter.string(from: startOfLastMonth), dateFormatter.string(from: startOfNextMonth))
+        return (DateFormatter.monthYear.string(from: startOfLastMonth), DateFormatter.monthYear.string(from: startOfNextMonth))
     }
 
     @State private var offset: CGFloat = 0

@@ -100,11 +100,11 @@ class DataController: ObservableObject {
 
     var addedTransaction: Bool {
         get {
-            UserDefaults(suiteName: "group.com.habibm96.stash")!.bool(forKey: "newTransactionAdded")
+            (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).bool(forKey: "newTransactionAdded")
         }
 
         set {
-            UserDefaults(suiteName: "group.com.habibm96.stash")!.set(newValue, forKey: "newTransactionAdded")
+            (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(newValue, forKey: "newTransactionAdded")
         }
     }
 
@@ -324,7 +324,7 @@ class DataController: ObservableObject {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         switch type {
@@ -470,6 +470,77 @@ class DataController: ObservableObject {
 //        let notes = transactions.map { $0.wrappedNote }
 //
 //        return Array(Set(notes))
+    }
+
+    func getSuggestedCategory(for note: String, income: Bool) -> Category? {
+        let normalizedNote = normalizedCategorySuggestionText(note)
+        guard normalizedNote.count >= 2 else {
+            return nil
+        }
+
+        let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+        request.fetchLimit = 300
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: false)]
+        request.predicate = NSPredicate(format: "income = %d AND category != nil", income)
+
+        let noteTokens = Set(categorySuggestionTokens(from: normalizedNote))
+        guard !noteTokens.isEmpty else {
+            return nil
+        }
+
+        var categoryScores: [Category: Double] = [:]
+
+        for (index, transaction) in results(for: request).enumerated() {
+            guard let category = transaction.category else {
+                continue
+            }
+
+            let transactionNote = normalizedCategorySuggestionText(transaction.wrappedNote)
+            guard transactionNote.count >= 2 else {
+                continue
+            }
+
+            let transactionTokens = Set(categorySuggestionTokens(from: transactionNote))
+            let matchingTokens = noteTokens.intersection(transactionTokens).count
+            let recencyWeight = max(0.25, 1.0 - (Double(index) / 300.0))
+
+            let score: Double
+            if transactionNote == normalizedNote {
+                score = 12.0
+            } else if transactionNote.hasPrefix(normalizedNote) || normalizedNote.hasPrefix(transactionNote) {
+                score = 7.0
+            } else if transactionNote.contains(normalizedNote) || normalizedNote.contains(transactionNote) {
+                score = 5.0
+            } else if matchingTokens > 0 {
+                score = Double(matchingTokens) * 2.0
+            } else {
+                continue
+            }
+
+            categoryScores[category, default: 0] += score * recencyWeight
+        }
+
+        return categoryScores.max { lhs, rhs in
+            if lhs.value == rhs.value {
+                return lhs.key.transactionCount < rhs.key.transactionCount
+            }
+            return lhs.value < rhs.value
+        }?.key
+    }
+
+    private func normalizedCategorySuggestionText(_ text: String) -> String {
+        text
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    }
+
+    private func categorySuggestionTokens(from text: String) -> [String] {
+        text
+            .components(separatedBy: .whitespacesAndNewlines)
+            .filter { $0.count >= 2 }
     }
 
     @available(iOS 16, *)
@@ -647,7 +718,7 @@ class DataController: ObservableObject {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         let dateCapPredicate = NSPredicate(format: "%K <= %@", #keyPath(Transaction.date), Date.now as CVarArg)
@@ -695,7 +766,7 @@ class DataController: ObservableObject {
                 let thisWeek = calendar.date(from: dateComponents)!
                 startPredicate = NSPredicate(format: "%K >= %@", #keyPath(Transaction.date), thisWeek as CVarArg)
             } else if type == 3 {
-                let startOfMonth = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstDayOfMonth")
+                let startOfMonth = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstDayOfMonth")
 
                 let thisMonth = getStartOfMonth(startDay: startOfMonth)
                 startPredicate = NSPredicate(format: "%K >= %@", #keyPath(Transaction.date), thisMonth as CVarArg)
@@ -1199,7 +1270,7 @@ class DataController: ObservableObject {
             // calendar initialization
             var calendar = Calendar(identifier: .gregorian)
 
-            calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+            calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
             calendar.minimumDaysInFirstWeek = 4
 
             var dictionary = [Date: Double]()
@@ -1373,7 +1444,7 @@ class DataController: ObservableObject {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         let startPredicate = NSPredicate(format: "%K >= %@", #keyPath(Transaction.date), date as CVarArg)
@@ -1504,7 +1575,7 @@ class DataController: ObservableObject {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         let endPredicate = NSPredicate(format: "%K < %@", #keyPath(Transaction.date), Date.now as CVarArg)
@@ -1525,7 +1596,7 @@ class DataController: ObservableObject {
 
             startPredicate = NSPredicate(format: "%K >= %@", #keyPath(Transaction.date), startDate as CVarArg)
         case .month:
-            let startOfMonth = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstDayOfMonth")
+            let startOfMonth = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstDayOfMonth")
 
             startDate = getStartOfMonth(startDay: startOfMonth)
 
@@ -1553,7 +1624,7 @@ class DataController: ObservableObject {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         switch type {

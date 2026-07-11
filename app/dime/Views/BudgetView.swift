@@ -81,7 +81,7 @@ struct ActualBudgetView: View {
     @State var date = Date.now
 
     var body: some View {
-        NavigationView {
+        CompatibleNavigationStack {
             VStack(spacing: 0) {
                 HStack {
                     Text("Budgets")
@@ -1804,7 +1804,7 @@ struct FilteredBudgetView: View {
 
         var calendar = Calendar(identifier: .gregorian)
 
-        calendar.firstWeekday = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(forKey: "firstWeekday")
+        calendar.firstWeekday = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(forKey: "firstWeekday")
         calendar.minimumDaysInFirstWeek = 4
 
         if type == 1 {

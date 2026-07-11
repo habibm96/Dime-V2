@@ -148,7 +148,7 @@ struct SettingsView: View {
   @EnvironmentObject var dataController: DataController
 
   var body: some View {
-    NavigationView {
+    CompatibleNavigationStack {
       VStack {
         HStack {
           Text("Settings")
@@ -217,9 +217,9 @@ struct SettingsView: View {
                   incomeTracking.toggle()
 
                   if !incomeTracking {
-                    UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+                    (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
                       false, forKey: "insightsViewIncomeFiltering")
-                    UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+                    (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
                       3, forKey: "logInsightsType")
                   }
                 })
@@ -411,9 +411,9 @@ struct SettingsView: View {
 
               Button {
                 let url = "https://apps.apple.com/app/id1635280255?action=write-review"
-                guard let writeReviewURL = URL(string: url)
-                else { fatalError("Expected a valid URL") }
-                UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
+                if let writeReviewURL = URL(string: url) {
+                  UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
+                }
               } label: {
                 SettingsRowView(systemImage: "star.fill", title: "Rate on App Store", colour: 126)
               }
@@ -470,11 +470,6 @@ struct SettingsView: View {
                 }
             }
 
-            Text("Made with ❤️ by \(makeAttributedString()) from 🇸🇬")
-              .font(.system(.footnote, design: .rounded).weight(.medium))
-
-              .foregroundColor(Color.SubtitleText)
-              .multilineTextAlignment(.center)
           }
           .padding(.horizontal, 25)
           .padding(.bottom, 95)
@@ -482,8 +477,7 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
       }
-      .navigationBarTitle("")
-      .navigationBarHidden(true)
+      .hiddenSettingsNavigationBar()
       .background(Color.PrimaryBackground)
       .fullScreenCover(isPresented: $showTipJarMenu) {
         TipJarAlert()
@@ -546,16 +540,11 @@ struct SettingsView: View {
   }
 
   func shareSheet(url: String) {
-    let url = URL(string: url)
-    let activityView = UIActivityViewController(activityItems: [url!], applicationActivities: nil)
-
-    let allScenes = UIApplication.shared.connectedScenes
-    let scene = allScenes.first { $0.activationState == .foregroundActive }
-
-    if let windowScene = scene as? UIWindowScene {
-      windowScene.keyWindow?.rootViewController?.present(
-        activityView, animated: true, completion: nil)
+    guard let url = URL(string: url) else {
+      return
     }
+
+    presentActivityViewController(UIActivityViewController(activityItems: [url], applicationActivities: nil))
   }
 
   func exportData() {
@@ -563,7 +552,9 @@ struct SettingsView: View {
     let transactions = dataController.results(for: fetchRequest)
 
     let fileName = "export.csv"
-    let path = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+    guard let path = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName) else {
+      return
+    }
     var csvText = "Date,Note,Amount,Category,Type\n"
 
     for transaction in transactions {
@@ -583,21 +574,18 @@ struct SettingsView: View {
     }
 
     do {
-      try csvText.write(to: path!, atomically: true, encoding: String.Encoding.utf8)
+      try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
     } catch {
+      return
     }
 
-    var filesToShare = [Any]()
-    filesToShare.append(path!)
+    presentActivityViewController(UIActivityViewController(activityItems: [path], applicationActivities: nil))
+  }
 
-    let av = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
-
-    let allScenes = UIApplication.shared.connectedScenes
-    let scene = allScenes.first { $0.activationState == .foregroundActive }
-
-    if let windowScene = scene as? UIWindowScene {
-      windowScene.keyWindow?.rootViewController?.present(av, animated: true, completion: nil)
-    }
+  func presentActivityViewController(_ activityViewController: UIActivityViewController) {
+    let scene = UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive }
+    let windowScene = scene as? UIWindowScene
+    windowScene?.keyWindow?.rootViewController?.present(activityViewController, animated: true)
   }
 }
 
@@ -892,8 +880,20 @@ struct SettingsCategoryView: View {
   var body: some View {
     CategoryView(mode: .settings, income: false)
       .navigationBarBackButtonHidden(true)
-      .navigationBarTitle("")
-      .navigationBarHidden(true)
+      .hiddenSettingsNavigationBar()
       .background(Color.PrimaryBackground)
+  }
+}
+
+private extension View {
+  @ViewBuilder
+  func hiddenSettingsNavigationBar() -> some View {
+    if #available(iOS 16.0, *) {
+      self.toolbar(.hidden, for: .navigationBar)
+    } else {
+      self
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
+    }
   }
 }

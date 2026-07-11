@@ -178,6 +178,14 @@ struct TransactionView: View {
         && showRecommendations
     }
 
+    var suggestedCategory: Category? {
+        guard toEdit == nil && category == nil && !showCategoryPicker else {
+            return nil
+        }
+
+        return dataController.getSuggestedCategory(for: note, income: income)
+    }
+
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
     var fontSize: CGFloat {
@@ -489,206 +497,18 @@ struct TransactionView: View {
                     }
                     .padding(.bottom, 5)
                 } else {
-                    HStack(spacing: 8) {
-                        HStack(spacing: 7) {
-                            Group {
-                                if date < Date.now {
-                                    Image(systemName: "calendar")
-                                } else {
-                                    if #available(iOS 17.0, *) {
-                                        Image(systemName: "rays")
-                                            .symbolEffect(
-                                                .variableColor.iterative.dimInactiveLayers.nonReversing,
-                                                options: .repeating, value: animateIcon)
-                                    } else {
-                                        Image(systemName: "slowmo")
-                                            .foregroundColor(Color.SubtitleText)
-                                    }
-                                }
-                            }
-                            .foregroundColor(Color.SubtitleText)
-                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
-
-                            Group {
-                                if isDateToday(date: date) {
-                                    Text("Today, \(getDateString(date: date))")
-                                        .lineLimit(1)
-                                } else {
-                                    Text(getDateString(date: date))
-                                        .lineLimit(1)
-                                }
-                            }
-                            .font(.system(.body, design: .rounded).weight(.semibold))
-
-                            if showTime {
-                                Spacer()
-
-                                Text(getTimeString(date: date))
-                                    .font(.system(.body, design: .rounded).weight(.semibold))
-                            }
-                        }
-                        .foregroundColor(Color.PrimaryText)
-                        .padding(.vertical, 8.5)
-                        .padding(.horizontal, 10)
-                        .animation(.default, value: isDateToday(date: date))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                                .strokeBorder(Color.Outline, lineWidth: 1.5)
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            UIApplication.shared.endEditing()
-                            showingDatePicker = true
+                    VStack(spacing: 8) {
+                        if let suggestedCategory {
+                            suggestedCategoryButton(suggestedCategory)
                         }
 
-                        if (expenseCategories.count == 0 && !income) || (incomeCategories.count == 0 && income) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "plus")
-                                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        HStack(spacing: 8) {
+                            dateControl
 
-                                Text("Category")
-                                    .font(.system(.body, design: .rounded).weight(.semibold))
-                                    .lineLimit(1)
-                            }
-                            .padding(.vertical, 8.5)
-                            .padding(.horizontal, 10)
-                            .foregroundColor(categoryButtonTextColor)
-                            .background(
-                                categoryButtonBackgroundColor,
-                                in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                            )
-                            .contentShape(Rectangle())
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                                    .strokeBorder(categoryButtonOutlineColor, lineWidth: 1.5)
-                            )
-                            .drawingGroup()
-                            .offset(x: shake ? -5 : 0)
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                showCategorySheet = true
-                            }
-                        } else {
-
-                            Group {
-                                if showCategoryPicker {
-                                    HStack(spacing: 10) {
-
-                                        Text("Close")
-                                            .font(.system(.body, design: .rounded).weight(.semibold))
-                                            .lineLimit(1)
-
-//                                        Image(systemName: "xmark.circle.fill")
-//                                            .font(.system(.footnote, design: .rounded).weight(.bold))
-                                    }
-                                    .padding(.vertical, 8.5)
-                                    .padding(.horizontal, 10)
-                                    .frame(width: widthOfCategoryButton)
-                                    .foregroundColor(Color.AlertRed)
-                                    .background(Color.AlertRed.opacity(0.23),
-                                        in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                                    )
-                                } else {
-                                    if let unwrappedCategory = category {
-                                        HStack(spacing: 5) {
-                                            Text(unwrappedCategory.wrappedEmoji)
-                                                .font(.system(.footnote, design: .rounded).weight(.semibold))
-
-                                            Text(unwrappedCategory.wrappedName)
-                                                .font(.system(.body, design: .rounded).weight(.semibold))
-                                                .lineLimit(1)
-                                        }
-                                        .padding(.vertical, 8.5)
-                                        .padding(.horizontal, 10)
-                                        .foregroundColor(Color(hex: unwrappedCategory.wrappedColour))
-                                        .background(
-                                            Color(hex: unwrappedCategory.wrappedColour).opacity(0.35),
-                                            in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                                        )
-    //                                    .popover(
-    //                                        present: $showCategoryPicker,
-    //                                        attributes: {
-    //                                            $0.position = .absolute(
-    //                                                originAnchor: .topRight,
-    //                                                popoverAnchor: .bottomRight
-    //                                            )
-    //                                            $0.rubberBandingMode = .none
-    //                                            $0.sourceFrameInset = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
-    //                                            $0.presentation.animation = .easeInOut(duration: 0.2)
-    //                                            $0.dismissal.animation = .easeInOut(duration: 0.3)
-    //                                        }
-    //                                    ) {
-    //                                        CategoryPickerView(
-    //                                            category: $category, showPicker: $showCategoryPicker,
-    //                                            showSheet: $showCategorySheet, income: income, darkMode: darkMode
-    //                                        )
-    //                                        .environment(\.managedObjectContext, self.moc)
-    //                                    } background: {
-    //                                        backgroundColor.opacity(0.6)
-    //                                    }
-                                    } else {
-                                        HStack(spacing: 5.5) {
-                                            if #available(iOS 17.0, *) {
-                                                Image(systemName: "circle.grid.2x2")
-                                                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                                                    .symbolEffect(
-                                                        .bounce.up.byLayer, options: .repeating.speed(0.5),
-                                                        value: showCategoryPicker)
-                                            } else {
-                                                Image(systemName: "circle.grid.2x2")
-                                                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                                            }
-
-                                            Text("Category")
-                                                .font(.system(.body, design: .rounded).weight(.semibold))
-                                                .lineLimit(1)
-                                        }
-                                        .padding(.vertical, 8.5)
-                                        .padding(.horizontal, 10)
-                                        .frame(width: widthOfCategoryButton)
-                                        .foregroundColor(categoryButtonTextColor)
-                                        .background(
-                                            categoryButtonBackgroundColor,
-                                            in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                                        )
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 11.5, style: .continuous)
-                                                .strokeBorder(categoryButtonOutlineColor, lineWidth: 1.5)
-                                        )
-                                        .drawingGroup()
-                                        .offset(x: shake ? -5 : 0)
-    //                                    .popover(
-    //                                        present: $showCategoryPicker,
-    //                                        attributes: {
-    //                                            $0.position = .absolute(
-    //                                                originAnchor: .topRight,
-    //                                                popoverAnchor: .bottomRight
-    //                                            )
-    //                                            $0.rubberBandingMode = .none
-    //                                            $0.sourceFrameInset = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
-    //                                            $0.presentation.animation = .easeInOut(duration: 0.2)
-    //                                            $0.dismissal.animation = .easeInOut(duration: 0.3)
-    //                                        }
-    //                                    ) {
-    //                                        CategoryPickerView(
-    //                                            category: $category, showPicker: $showCategoryPicker,
-    //                                            showSheet: $showCategorySheet, income: income, darkMode: darkMode
-    //                                        )
-    //                                        .environment(\.managedObjectContext, self.moc)
-    //                                    } background: {
-    //                                        backgroundColor.opacity(0.6)
-    //                                    }
-                                    }
-                                }
-
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                withAnimation(.easeInOut) {
-                                    showCategoryPicker.toggle()
-                                }
-
+                            if (expenseCategories.count == 0 && !income) || (incomeCategories.count == 0 && income) {
+                                addCategoryControl
+                            } else {
+                                categoryControl
                             }
                         }
                     }
@@ -921,6 +741,199 @@ struct TransactionView: View {
         .onChange(of: dynamicTypeSize) { _ in
             if income {
                 swipingOffset = capsuleWidth
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func suggestedCategoryButton(_ suggestedCategory: Category) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                category = suggestedCategory
+            }
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        } label: {
+            HStack(spacing: 7) {
+                Image(systemName: "sparkles")
+                    .font(.system(.footnote, design: .rounded).weight(.bold))
+
+                Text("Suggested")
+                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+
+                Text(suggestedCategory.wrappedEmoji)
+                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+
+                Text(suggestedCategory.wrappedName)
+                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+                    .lineLimit(1)
+            }
+            .foregroundColor(Color(hex: suggestedCategory.wrappedColour))
+            .padding(.vertical, 7)
+            .padding(.horizontal, 10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                Color(hex: suggestedCategory.wrappedColour).opacity(0.18),
+                in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(Color(hex: suggestedCategory.wrappedColour).opacity(0.4), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Suggested category \(suggestedCategory.wrappedName)")
+    }
+
+    private var dateControl: some View {
+        HStack(spacing: 7) {
+            Group {
+                if date < Date.now {
+                    Image(systemName: "calendar")
+                } else {
+                    if #available(iOS 17.0, *) {
+                        Image(systemName: "rays")
+                            .symbolEffect(
+                                .variableColor.iterative.dimInactiveLayers.nonReversing,
+                                options: .repeating, value: animateIcon)
+                    } else {
+                        Image(systemName: "slowmo")
+                            .foregroundColor(Color.SubtitleText)
+                    }
+                }
+            }
+            .foregroundColor(Color.SubtitleText)
+            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+
+            Group {
+                if isDateToday(date: date) {
+                    Text("Today, \(getDateString(date: date))")
+                        .lineLimit(1)
+                } else {
+                    Text(getDateString(date: date))
+                        .lineLimit(1)
+                }
+            }
+            .font(.system(.body, design: .rounded).weight(.semibold))
+
+            if showTime {
+                Spacer()
+
+                Text(getTimeString(date: date))
+                    .font(.system(.body, design: .rounded).weight(.semibold))
+            }
+        }
+        .foregroundColor(Color.PrimaryText)
+        .padding(.vertical, 8.5)
+        .padding(.horizontal, 10)
+        .animation(.default, value: isDateToday(date: date))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(
+            RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+                .strokeBorder(Color.Outline, lineWidth: 1.5)
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+            showingDatePicker = true
+        }
+    }
+
+    private var addCategoryControl: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "plus")
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+
+            Text("Category")
+                .font(.system(.body, design: .rounded).weight(.semibold))
+                .lineLimit(1)
+        }
+        .padding(.vertical, 8.5)
+        .padding(.horizontal, 10)
+        .foregroundColor(categoryButtonTextColor)
+        .background(
+            categoryButtonBackgroundColor,
+            in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+        )
+        .contentShape(Rectangle())
+        .overlay(
+            RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+                .strokeBorder(categoryButtonOutlineColor, lineWidth: 1.5)
+        )
+        .drawingGroup()
+        .offset(x: shake ? -5 : 0)
+        .onTapGesture {
+            showCategorySheet = true
+        }
+    }
+
+    @ViewBuilder
+    private var categoryControl: some View {
+        Group {
+            if showCategoryPicker {
+                Text("Close")
+                    .font(.system(.body, design: .rounded).weight(.semibold))
+                    .lineLimit(1)
+                    .padding(.vertical, 8.5)
+                    .padding(.horizontal, 10)
+                    .frame(width: widthOfCategoryButton)
+                    .foregroundColor(Color.AlertRed)
+                    .background(
+                        Color.AlertRed.opacity(0.23),
+                        in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+                    )
+            } else if let unwrappedCategory = category {
+                HStack(spacing: 5) {
+                    Text(unwrappedCategory.wrappedEmoji)
+                        .font(.system(.footnote, design: .rounded).weight(.semibold))
+
+                    Text(unwrappedCategory.wrappedName)
+                        .font(.system(.body, design: .rounded).weight(.semibold))
+                        .lineLimit(1)
+                }
+                .padding(.vertical, 8.5)
+                .padding(.horizontal, 10)
+                .foregroundColor(Color(hex: unwrappedCategory.wrappedColour))
+                .background(
+                    Color(hex: unwrappedCategory.wrappedColour).opacity(0.35),
+                    in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+                )
+            } else {
+                HStack(spacing: 5.5) {
+                    if #available(iOS 17.0, *) {
+                        Image(systemName: "circle.grid.2x2")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .symbolEffect(
+                                .bounce.up.byLayer, options: .repeating.speed(0.5),
+                                value: showCategoryPicker)
+                    } else {
+                        Image(systemName: "circle.grid.2x2")
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                    }
+
+                    Text("Category")
+                        .font(.system(.body, design: .rounded).weight(.semibold))
+                        .lineLimit(1)
+                }
+                .padding(.vertical, 8.5)
+                .padding(.horizontal, 10)
+                .frame(width: widthOfCategoryButton)
+                .foregroundColor(categoryButtonTextColor)
+                .background(
+                    categoryButtonBackgroundColor,
+                    in: RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 11.5, style: .continuous)
+                        .strokeBorder(categoryButtonOutlineColor, lineWidth: 1.5)
+                )
+                .drawingGroup()
+                .offset(x: shake ? -5 : 0)
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.easeInOut) {
+                showCategoryPicker.toggle()
             }
         }
     }

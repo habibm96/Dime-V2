@@ -37,7 +37,7 @@ extension HorizontalAlignment {
     static let moneySubtitle = HorizontalAlignment(MoneySubtitle.self)
 }
 
-extension UINavigationController: UIGestureRecognizerDelegate {
+extension UINavigationController: @retroactive UIGestureRecognizerDelegate {
     override open func viewDidLoad() {
         super.viewDidLoad()
         interactivePopGestureRecognizer?.delegate = self
@@ -51,7 +51,7 @@ extension UINavigationController: UIGestureRecognizerDelegate {
 // MARK: - Liquid Glass card helpers
 
 extension View {
-    /// Grouped-settings card: Liquid Glass on iOS 26+, SettingsBackground colour below.
+    /// Grouped-settings card: stable filled cards keep dense settings pages readable.
     func settingsCard(cornerRadius: CGFloat = 9) -> some View {
         modifier(SettingsCardBackground(cornerRadius: cornerRadius))
     }
@@ -65,19 +65,10 @@ extension View {
 private struct SettingsCardBackground: ViewModifier {
     let cornerRadius: CGFloat
     func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
-            content.background {
-                GlassEffectContainer {
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .glassEffect()
-                }
-            }
-        } else {
-            content.background(
-                Color.SettingsBackground,
-                in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-            )
-        }
+        content.background(
+            Color.SettingsBackground,
+            in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        )
     }
 }
 
@@ -96,6 +87,27 @@ private struct ContentCardBackground: ViewModifier {
                 Color.SecondaryBackground,
                 in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
             )
+        }
+    }
+}
+
+struct CompatibleNavigationStack<Content: View>: View {
+    private let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                content
+            }
+        } else {
+            NavigationView {
+                content
+            }
+            .navigationViewStyle(.stack)
         }
     }
 }

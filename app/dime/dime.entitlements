@@ -16,7 +16,7 @@
 	<string>$(TeamIdentifierPrefix)com.habibm96.stash</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.habibm96.stash</string>
+		<string>group.com.stash.ios</string>
 	</array>
 </dict>
 </plist>

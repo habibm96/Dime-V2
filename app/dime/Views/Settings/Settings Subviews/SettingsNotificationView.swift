@@ -71,7 +71,7 @@ struct SettingsNotificationsView: View {
                         showNotifications.toggle()
                         newNotification()
                       }
-                    } else if let error = error {
+                    } else if error != nil {
                       notificationsEnabled = false
                     }
                   }
@@ -189,15 +189,15 @@ struct SettingsNotificationsView: View {
         .padding(.horizontal, 15)
         .settingsCard()
         .onChange(of: option) { newValue in
-          UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+          (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
             option, forKey: "notificationOption")
 
           if newValue == 3 {
             let components = Calendar.current.dateComponents([.hour, .minute], from: customTime)
 
-            UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+            (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
               components.hour!, forKey: "customHour")
-            UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+            (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
               components.minute!, forKey: "customMinute")
           }
 
@@ -206,28 +206,28 @@ struct SettingsNotificationsView: View {
         .onChange(of: customTime) { _ in
           let components = Calendar.current.dateComponents([.hour, .minute], from: customTime)
 
-          UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+          (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
             components.hour!, forKey: "customHour")
-          UserDefaults(suiteName: "group.com.habibm96.stash")!.set(
+          (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).set(
             components.minute!, forKey: "customMinute")
 
           newNotification()
         }
         .onAppear {
-          if UserDefaults(suiteName: "group.com.habibm96.stash")!.object(
+          if (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).object(
             forKey: "notificationOption") != nil {
-            option = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(
+            option = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(
               forKey: "notificationOption")
           }
 
-          if UserDefaults(suiteName: "group.com.habibm96.stash")!.object(forKey: "customHour")
+          if (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).object(forKey: "customHour")
             != nil
-            && UserDefaults(suiteName: "group.com.habibm96.stash")!.object(forKey: "customMinute")
+            && (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).object(forKey: "customMinute")
               != nil {
             var components = DateComponents()
-            components.hour = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(
+            components.hour = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(
               forKey: "customHour")
-            components.minute = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(
+            components.minute = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(
               forKey: "customMinute")
             customTime = Calendar.current.date(from: components)!
           }
@@ -250,9 +250,9 @@ func newNotification() {
   var components = DateComponents()
   var option = 1
 
-  if UserDefaults(suiteName: "group.com.habibm96.stash")!.object(forKey: "notificationOption")
+  if (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).object(forKey: "notificationOption")
     != nil {
-    option = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(
+    option = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(
       forKey: "notificationOption")
   }
 
@@ -263,11 +263,11 @@ func newNotification() {
     components.hour = 20
     components.minute = 0
   } else {
-    if UserDefaults(suiteName: "group.com.habibm96.stash")!.object(forKey: "customHour") != nil,
-      UserDefaults(suiteName: "group.com.habibm96.stash")!.object(forKey: "customMinute") != nil {
-      components.hour = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(
+    if (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).object(forKey: "customHour") != nil,
+      (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).object(forKey: "customMinute") != nil {
+      components.hour = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(
         forKey: "customHour")
-      components.minute = UserDefaults(suiteName: "group.com.habibm96.stash")!.integer(
+      components.minute = (UserDefaults(suiteName: "group.com.habibm96.stash") ?? .standard).integer(
         forKey: "customMinute")
     } else {
       components.hour = 8
