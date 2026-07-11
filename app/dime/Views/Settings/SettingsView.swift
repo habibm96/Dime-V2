@@ -409,38 +409,23 @@ struct SettingsView: View {
                   systemImage: "hand.wave.fill", title: "Feature Request", colour: 125)
               }
 
-              Button {
-                let url = "https://apps.apple.com/app/id1635280255?action=write-review"
-                if let writeReviewURL = URL(string: url) {
-                  UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
-                }
-              } label: {
-                SettingsRowView(systemImage: "star.fill", title: "Rate on App Store", colour: 126)
-              }
-
-              Button {
-                shareSheet(url: "https://apps.apple.com/app/id1635280255")
-              } label: {
-                SettingsRowView(systemImage: "shareplay", title: "Share with Friends", colour: 127)
-              }
-
-              Button {
-                if let url = URL(string: "https://www.x.com/budgetwithdime") {
-                  UIApplication.shared.open(url)
-                }
-              } label: {
-                SettingsRowView(systemImage: "bird.fill", title: "Follow Dime on X", colour: 128)
-                  .frame(maxWidth: .infinity)
-              }
-
-              Button {
-                if let url = URL(string: "https://www.x.com/rarfell") {
-                  UIApplication.shared.open(url)
-                }
-              } label: {
-                SettingsRowView(
-                  systemImage: "camera.fill", title: "Follow Rafael on X", colour: 129)
-              }
+              // Rate & Share are disabled until Stash is published on the App Store.
+              // TODO: Re-enable and replace idYOUR_STASH_ID with the real Stash App Store
+              // ID once published (previously pointed at Dime's id1635280255).
+              //              Button {
+              //                let url = "https://apps.apple.com/app/idYOUR_STASH_ID?action=write-review"
+              //                if let writeReviewURL = URL(string: url) {
+              //                  UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
+              //                }
+              //              } label: {
+              //                SettingsRowView(systemImage: "star.fill", title: "Rate on App Store", colour: 126)
+              //              }
+              //
+              //              Button {
+              //                shareSheet(url: "https://apps.apple.com/app/idYOUR_STASH_ID")
+              //              } label: {
+              //                SettingsRowView(systemImage: "shareplay", title: "Share with Friends", colour: 127)
+              //              }
             }
             .padding(10)
             .settingsCard()
@@ -531,14 +516,6 @@ struct SettingsView: View {
     .frame(maxWidth: .infinity)
   }
 
-  func makeAttributedString() -> AttributedString {
-    var string = AttributedString("Rafael")
-    string.foregroundColor = Color.PrimaryText
-    string.link = URL(string: "https://www.x.com/rarfell")
-
-    return string
-  }
-
   func shareSheet(url: String) {
     guard let url = URL(string: url) else {
       return
@@ -606,7 +583,7 @@ struct TipJarAlert: View {
     if unlockManager.failedTransaction {
       return "Tip failed to go through, please try again!"
     } else if unlockManager.purchaseCount > 0 {
-      return "Thanks a million, \(Image(systemName: "heart.fill")) Rafael"
+      return "Thanks a million! \(Image(systemName: "heart.fill"))"
     } else {
       return "Have a great day ahead!"
     }
@@ -699,7 +676,7 @@ struct TipJarAlert: View {
             }
 
             Text(
-              "Hey! Dime was built by a solo student developer, and is intended to be completely free-of-charge, with no paywalls or ads. If you enjoy using Dime and want to support development, please consider a small tip."
+              "Hey! Stash is built by a solo developer, and is intended to be completely free-of-charge, with no paywalls or ads. If you enjoy using Stash and want to support development, please consider a small tip."
             )
             .font(.system(.callout, design: .rounded).weight(.medium))
 
