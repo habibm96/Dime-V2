@@ -48,12 +48,11 @@ struct InsightsSummaryBlockView: View {
         .onTapGesture {
             self.action()
         }
-        // Subtle colour tint ties each block to its meaning (green income /
-        // red expenses) instead of a heavy neutral grey.
-        .background(color.opacity(0.1), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        // Colour lives in the stroke and icon only — the box itself stays
+        // uncoloured so the header reads cleaner.
         .overlay {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(color.opacity(showOverlay ? 0.9 : 0.18), lineWidth: showOverlay ? 1.6 : 1)
+                .stroke(color.opacity(showOverlay ? 1 : 0.4), lineWidth: showOverlay ? 2 : 1.4)
         }
     }
 }

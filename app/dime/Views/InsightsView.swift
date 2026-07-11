@@ -321,8 +321,10 @@ struct HorizontalPieChartView: View {
                                         Text(displayPercent == 0 ? "<1%" : "\(displayPercent)%")
                                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                             .foregroundColor(boxColor)
+                                            .lineLimit(1)
+                                            .fixedSize()
                                             .padding(.vertical, 3)
-                                            .frame(width: percentWidth)
+                                            .padding(.horizontal, 8)
                                             .background(boxColor.opacity(0.23), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                                     }
                                 }
