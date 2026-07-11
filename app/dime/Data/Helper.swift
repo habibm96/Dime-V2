@@ -90,6 +90,20 @@ extension Category {
     var transactionCount: Int {
         transactions?.count ?? 0
     }
+
+    /// A deterministic, launch-stable seed derived from the category's id. Take it
+    /// modulo the palette size at the call site to pick a stable colour for
+    /// categories that don't carry their own distinct colour (income categories are
+    /// all saved as the same green), so their chart colour no longer shuffles as
+    /// spending re-ranks them.
+    var stableColorSeed: Int {
+        let key = id?.uuidString ?? wrappedName
+        var hash = 5381
+        for scalar in key.unicodeScalars {
+            hash = (hash &* 33) &+ Int(scalar.value)
+        }
+        return hash & Int.max
+    }
 }
 
 public extension Budget {

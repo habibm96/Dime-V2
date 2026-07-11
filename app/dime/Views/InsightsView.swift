@@ -207,6 +207,33 @@ struct HorizontalPieChartView: View {
         return holding
     }
 
+    /// Whole-number percentages that add up to exactly 100, using the
+    /// largest-remainder method so the displayed figures don't visibly
+    /// disagree with the total.
+    var roundedPercents: [UUID: Int] {
+        let cats = categories
+        guard !cats.isEmpty else { return [:] }
+
+        let raw = cats.map { $0.percent * 100 }
+        var floors = raw.map { Int(floor($0)) }
+        let deficit = 100 - floors.reduce(0, +)
+
+        if deficit > 0 {
+            let order = raw.enumerated()
+                .sorted { ($0.element - floor($0.element)) > ($1.element - floor($1.element)) }
+                .map { $0.offset }
+            for i in 0 ..< min(deficit, order.count) {
+                floors[order[i]] += 1
+            }
+        }
+
+        var result = [UUID: Int]()
+        for (index, cat) in cats.enumerated() {
+            result[cat.id] = max(0, floors[index])
+        }
+        return result
+    }
+
     var body: some View {
         if !categories.isEmpty {
             VStack(alignment: .leading, spacing: 10) {
@@ -224,7 +251,7 @@ struct HorizontalPieChartView: View {
                                     AnimatedHorizontalBarGraph(category: category, index: categories.firstIndex(of: category) ?? 0)
                                         .frame(width: (proxy.size.width * (1.0 - (0.015 * Double(categories.count - 1)))) * category.percent)
                                         .onTapGesture {
-                                            withAnimation(.easeInOut) {
+                                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                                 if categoryFilter == category.category {
                                                     selectedDate = nil
                                                     categoryFilterMode = false
@@ -258,7 +285,8 @@ struct HorizontalPieChartView: View {
                     VStack(spacing: 10) {
                         ForEach(categories, id: \.self) { category in
                             if !categoryFilterMode || categoryFilter == category.category {
-                                let boxColor = category.category.income ? Color(hex: Color.colorArray[(categories.firstIndex(of: category) ?? 0) % Color.colorArray.count]) : Color(hex: category.category.wrappedColour)
+                                let boxColor = category.category.income ? Color(hex: Color.colorArray[category.category.stableColorSeed % Color.colorArray.count]) : Color(hex: category.category.wrappedColour)
+                                let displayPercent = roundedPercents[category.id] ?? 0
 
                                 HStack(spacing: 10) {
 
@@ -275,7 +303,7 @@ struct HorizontalPieChartView: View {
 
                                     if categoryFilterMode && categoryFilter == category.category {
                                         Button {
-                                            withAnimation(.easeInOut) {
+                                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                                 selectedDate = nil
                                                 categoryFilterMode = false
                                                 categoryFilter = nil
@@ -290,7 +318,7 @@ struct HorizontalPieChartView: View {
 
                                     } else {
 
-                                        Text(category.percent < 0.01 ? "<1%" : "\(category.percent * 100, specifier: "%.0f")%")
+                                        Text(displayPercent == 0 ? "<1%" : "\(displayPercent)%")
                                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                             .foregroundColor(boxColor)
                                             .padding(.vertical, 3)
@@ -305,7 +333,7 @@ struct HorizontalPieChartView: View {
                                 .fixedSize(horizontal: false, vertical: true)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
-                                    withAnimation(.easeInOut) {
+                                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                         if !categoryFilterMode {
                                             selectedDate = nil
                                             categoryFilterMode = true
@@ -2175,27 +2203,25 @@ struct AnimatedHorizontalBarGraph: View {
     var category: PowerCategory
     var index: Int
 
-    @State var showBar: Bool = true
+    @State var showBar: Bool = false
 
     var body: some View {
         HStack(spacing: 0) {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(category.category.income ? Color(hex: Color.colorArray[index % Color.colorArray.count]) : Color(hex: category.category.wrappedColour))
+                .fill(category.category.income ? Color(hex: Color.colorArray[category.category.stableColorSeed % Color.colorArray.count]) : Color(hex: category.category.wrappedColour))
                 .frame(width: showBar ? nil : 0, alignment: .leading)
 
             Spacer(minLength: 0)
         }
-//        .onAppear {
-//            DispatchQueue.main.asyncAfter(deadline: .now()) {
-//                if !animated {
-//                    showBar = true
-//                } else {
-//                    withAnimation(.easeInOut(duration: 0.7).delay(Double(index) * 0.5)) {
-//                        showBar = true
-//                    }
-//                }
-//            }
-//        }
+        .onAppear {
+            if !animated {
+                showBar = true
+            } else {
+                withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.85).delay(min(Double(index) * 0.04, 0.4))) {
+                    showBar = true
+                }
+            }
+        }
     }
 }
 
