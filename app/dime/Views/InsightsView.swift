@@ -258,7 +258,7 @@ struct HorizontalPieChartView: View {
                     VStack(spacing: 10) {
                         ForEach(categories, id: \.self) { category in
                             if !categoryFilterMode || categoryFilter == category.category {
-                                let boxColor = category.category.income ? Color(hex: Color.colorArray[categories.firstIndex(of: category) ?? 0]) : Color(hex: category.category.wrappedColour)
+                                let boxColor = category.category.income ? Color(hex: Color.colorArray[(categories.firstIndex(of: category) ?? 0) % Color.colorArray.count]) : Color(hex: category.category.wrappedColour)
 
                                 HStack(spacing: 10) {
 
@@ -290,7 +290,7 @@ struct HorizontalPieChartView: View {
 
                                     } else {
 
-                                        Text("\(category.percent * 100, specifier: "%.0f")%")
+                                        Text(category.percent < 0.01 ? "<1%" : "\(category.percent * 100, specifier: "%.0f")%")
                                             .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                             .foregroundColor(boxColor)
                                             .padding(.vertical, 3)
@@ -304,7 +304,6 @@ struct HorizontalPieChartView: View {
                                 .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(categoryFilterMode && categoryFilter == category.category ? Color.Outline : Color.clear, lineWidth: 1.3))
                                 .fixedSize(horizontal: false, vertical: true)
                                 .contentShape(Rectangle())
-                                .drawingGroup()
                                 .onTapGesture {
                                     withAnimation(.easeInOut) {
                                         if !categoryFilterMode {
@@ -2162,7 +2161,7 @@ struct AnimatedBarGraph: View {
                 if !animated {
                     showBar = true
                 } else {
-                    withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.8).delay(Double(index) * 0.1)) {
+                    withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.8, blendDuration: 0.8).delay(min(Double(index) * 0.03, 0.4))) {
                         showBar = true
                     }
                 }
@@ -2181,7 +2180,7 @@ struct AnimatedHorizontalBarGraph: View {
     var body: some View {
         HStack(spacing: 0) {
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(category.category.income ? Color(hex: Color.colorArray[index]) : Color(hex: category.category.wrappedColour))
+                .fill(category.category.income ? Color(hex: Color.colorArray[index % Color.colorArray.count]) : Color(hex: category.category.wrappedColour))
                 .frame(width: showBar ? nil : 0, alignment: .leading)
 
             Spacer(minLength: 0)
