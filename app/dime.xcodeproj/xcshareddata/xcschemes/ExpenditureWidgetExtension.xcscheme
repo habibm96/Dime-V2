@@ -31,7 +31,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5327D282287C697400F76ADF"
                BuildableName = "Stash: Money Tracker.app"
-               BlueprintName = "dime"
+               BlueprintName = "Stash"
                ReferencedContainer = "container:dime.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -74,7 +74,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5327D282287C697400F76ADF"
             BuildableName = "Stash: Money Tracker.app"
-            BlueprintName = "dime"
+            BlueprintName = "Stash"
             ReferencedContainer = "container:dime.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -110,7 +110,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5327D282287C697400F76ADF"
             BuildableName = "Stash: Money Tracker.app"
-            BlueprintName = "dime"
+            BlueprintName = "Stash"
             ReferencedContainer = "container:dime.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

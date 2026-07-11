@@ -711,9 +711,9 @@
 			productReference = 5313EC6628ACE941000EAB0C /* BudgetIntentUI.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		5327D282287C697400F76ADF /* dime */ = {
+		5327D282287C697400F76ADF /* Stash */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5327D291287C697C00F76ADF /* Build configuration list for PBXNativeTarget "dime" */;
+			buildConfigurationList = 5327D291287C697C00F76ADF /* Build configuration list for PBXNativeTarget "Stash" */;
 			buildPhases = (
 				5327D27F287C697400F76ADF /* Sources */,
 				5327D280287C697400F76ADF /* Frameworks */,
@@ -729,7 +729,7 @@
 				5313EC7128ACE941000EAB0C /* PBXTargetDependency */,
 				5313EC7428ACE941000EAB0C /* PBXTargetDependency */,
 			);
-			name = dime;
+			name = Stash;
 			packageProductDependencies = (
 				5327D2E5287C6CC300F76ADF /* Popovers */,
 				53B1D1A7289A60D500E28062 /* CrookedText */,
@@ -807,7 +807,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5327D282287C697400F76ADF /* dime */,
+				5327D282287C697400F76ADF /* Stash */,
 				53B1D189288ED7E400E28062 /* ExpenditureWidgetExtension */,
 				5313EC5A28ACE941000EAB0C /* BudgetIntent */,
 				5313EC6528ACE941000EAB0C /* BudgetIntentUI */,
@@ -1496,7 +1496,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5327D291287C697C00F76ADF /* Build configuration list for PBXNativeTarget "dime" */ = {
+		5327D291287C697C00F76ADF /* Build configuration list for PBXNativeTarget "Stash" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5327D292287C697C00F76ADF /* Debug */,

@@ -62,10 +62,22 @@ class DataController: ObservableObject {
 
         container.persistentStoreDescriptions = [description]
 
-        container.loadPersistentStores { description, error in
+        container.loadPersistentStores { storeDescription, error in
 
             if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo) for \(description)")
+                // The iCloud/CloudKit container or App Group may not be provisioned yet
+                // (capability not registered, or an extension without iCloud access).
+                // Fall back to a local-only store instead of crashing, so the app and
+                // its widgets keep working. iCloud sync resumes once the capability is
+                // available.
+                print("Core Data failed to load with CloudKit: \(error), \(error.userInfo). Falling back to a local-only store.")
+
+                storeDescription.cloudKitContainerOptions = nil
+                self.container.loadPersistentStores { _, retryError in
+                    if let retryError = retryError as NSError? {
+                        print("Core Data failed to load local-only store: \(retryError), \(retryError.userInfo)")
+                    }
+                }
             }
 
             self.container.viewContext.automaticallyMergesChangesFromParent = true
