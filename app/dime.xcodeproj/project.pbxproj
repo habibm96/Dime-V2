@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4636D97E2FF01AC4005C3E1B /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4636D97D2FF01AC4005C3E1B /* DateFormatters.swift */; };
+		4687C12630024785001DF845 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4687C12530024785001DF845 /* PrivacyInfo.xcprivacy */; };
 		530C89D62A793B6C00B5028D /* ShortcutsEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530C89D52A793B6C00B5028D /* ShortcutsEntities.swift */; };
 		530C9DFD28ACE14A0038535F /* BudgetWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530C9DFC28ACE14A0038535F /* BudgetWidget.swift */; };
 		530C9DFE28ACE14A0038535F /* BudgetWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530C9DFC28ACE14A0038535F /* BudgetWidget.swift */; };
@@ -213,6 +214,7 @@
 
 /* Begin PBXFileReference section */
 		4636D97D2FF01AC4005C3E1B /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
+		4687C12530024785001DF845 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = file; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		530C89D52A793B6C00B5028D /* ShortcutsEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsEntities.swift; sourceTree = "<group>"; };
 		530C9DFC28ACE14A0038535F /* BudgetWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetWidget.swift; sourceTree = "<group>"; };
 		5311A22E29F04EF300A5BE20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/WidgetConfiguration.intentdefinition; sourceTree = "<group>"; };
@@ -459,6 +461,7 @@
 				5327D296287C69A400F76ADF /* Utilities */,
 				5327D28C287C697C00F76ADF /* Preview Content */,
 				AE30A1522AE7D95200E516B3 /* Components */,
+				4687C12530024785001DF845 /* PrivacyInfo.xcprivacy */,
 			);
 			path = dime;
 			sourceTree = "<group>";
@@ -833,6 +836,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5327D28E287C697C00F76ADF /* Preview Assets.xcassets in Resources */,
+				4687C12630024785001DF845 /* PrivacyInfo.xcprivacy in Resources */,
 				D63B204A2D8728C300CAFB20 /* Localizable.strings in Resources */,
 				D63B204B2D8728C300CAFB20 /* Localizable.stringsdict in Resources */,
 				5327D295287C698900F76ADF /* Assets.xcassets in Resources */,
