@@ -60,6 +60,16 @@ extension View {
     func contentCard(cornerRadius: CGFloat = 13) -> some View {
         modifier(ContentCardBackground(cornerRadius: cornerRadius))
     }
+
+    /// Rolls digits smoothly when a displayed number changes (iOS 16+); no-op below.
+    @ViewBuilder
+    func numericContentTransition() -> some View {
+        if #available(iOS 16.0, *) {
+            self.contentTransition(.numericText())
+        } else {
+            self
+        }
+    }
 }
 
 private struct SettingsCardBackground: ViewModifier {

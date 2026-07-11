@@ -140,6 +140,8 @@ struct MyButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 13, style: .continuous)
                     .fill(configuration.isPressed ? Color.SubtitleText : Color.DarkBackground)
             }
+            .scaleEffect(configuration.isPressed ? 0.94 : 1)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
 
@@ -150,8 +152,7 @@ struct BouncyButton: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         return configuration.label
             .scaleEffect(configuration.isPressed ? scale : 1)
-//            .scaleEffect(configuration.isPressed ? 1.3 : 1)
-            .animation(.easeOut(duration: duration), value: configuration.isPressed)
+            .animation(.spring(response: max(duration, 0.25), dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
 

@@ -1201,9 +1201,11 @@ struct FilteredSearchNewTransactionView: View {
 struct NumPadButton: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         return configuration.label
-            .scaleEffect(configuration.isPressed ? 0.8 : 1)
-            .animation(.easeOut(duration: 0.3), value: configuration.isPressed)
-            .opacity(configuration.isPressed ? 0.5 : 1)
+            .scaleEffect(configuration.isPressed ? 0.92 : 1)
+            .opacity(configuration.isPressed ? 0.7 : 1)
+            // Snappy spring gives an instant, tactile press with a soft settle,
+            // rather than the slow 0.3s ease that lagged behind fast taps.
+            .animation(.spring(response: 0.28, dampingFraction: 0.55), value: configuration.isPressed)
     }
 }
 

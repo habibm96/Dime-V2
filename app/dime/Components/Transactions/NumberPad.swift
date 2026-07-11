@@ -309,6 +309,8 @@ struct NumberPadTextView: View {
                     .foregroundColor(Color.PrimaryText)
 
             }
+            .numericContentTransition()
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: amount)
         }
         .minimumScaleFactor(0.5)
         .lineLimit(1)
