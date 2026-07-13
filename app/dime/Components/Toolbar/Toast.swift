@@ -1,3 +1,10 @@
+//
+//  Toast.swift
+//  Stash
+//
+//  Modified by Habib Allawati, 2026.
+//
+
 import SwiftUI
 
 struct Toast: View {

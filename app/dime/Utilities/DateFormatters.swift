@@ -5,6 +5,8 @@
 //  DateFormatter is expensive to allocate (~100µs each). These static
 //  instances are created once per process lifetime and reused everywhere.
 //
+//  Modified by Habib Allawati, 2026.
+//
 
 import Foundation
 

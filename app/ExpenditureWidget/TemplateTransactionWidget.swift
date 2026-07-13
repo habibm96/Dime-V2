@@ -3,6 +3,7 @@
 //  ExpenditureWidgetExtension
 //
 //  Created by Rafael Soh on 11/9/23.
+//  Modified by Habib Allawati, 2026.
 //
 
 // import WidgetKit

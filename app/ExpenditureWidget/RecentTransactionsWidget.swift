@@ -3,6 +3,7 @@
 //  ExpenditureWidgetExtension
 //
 //  Created by Rafael Soh on 12/8/22.
+//  Modified by Habib Allawati, 2026.
 //
 
 import SwiftUI

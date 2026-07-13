@@ -1,3 +1,10 @@
+//
+//  Toolbar.swift
+//  Stash
+//
+//  Modified by Habib Allawati, 2026.
+//
+
 import SwiftUI
 
 struct Toolbar<Content>: View where Content: View {
